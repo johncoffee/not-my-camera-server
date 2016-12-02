@@ -6,13 +6,15 @@
 </head>
 <body>
 <form method="POST" action="/api/image" enctype="multipart/form-data" style="display: none">
-    <h3 style="font-weight: bold">Take a photo!</h3>
+    <h3 style="font-weight: bold">1. Take a photo!</h3>
+    <p><label>
+        Use the camera (click here)
+        <input name=filefield type="file" accept="image/jpeg" capture="camera" onchange="changeEventHandler(event);">
+    </label>
 
-    <p><input name=filefield type="file" accept="image/*" capture="camera"  onchange="changeEventHandler(event);">
+    <h3>2. Send it</h3>
+    <p><input type="submit" style="font-size: 17px" value="Post photo!" disabled>
 
-    <p><input type="submit" style="font-size: 17px" value="Send!">
-
-    <hr>
     <p><input type="hidden" name="alpha" placeholder="alpha">
     <p><input type="hidden" name="beta"  placeholder="beta">
     <p><input type="hidden" name="gamma" placeholder="gamma">
@@ -26,13 +28,15 @@
     document.querySelector("form").style.display = "block"
   }
 
-  function changeEventHandler(event) {
+  function changeEventHandler() {
     updateSensorFields()
+    document.querySelector('[type=submit]').removeAttribute("disabled")
   }
 
   if (window.DeviceOrientationEvent) {
     window.addEventListener("deviceorientation", (event) => {
         if (currentEvent === null) {
+          // first run
           document.querySelector("form").style.display = "block"
         }
         currentEvent = event

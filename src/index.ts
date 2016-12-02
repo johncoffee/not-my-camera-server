@@ -68,7 +68,8 @@ router.POST("/api/image", (req:IncomingMessage, res:ServerResponse) => {
             console.log(err ? err : "Done")
         })
 
-        res.end("thanks")
+        res.writeHead(303, {Location: "/"})
+        res.end()
     });
 
     return req.pipe(busboy)

@@ -51,7 +51,8 @@ router.POST("/api/image", (req, res) => {
         fs.writeFile(dest.replace(/\.\w+$/, `.json`), JSON.stringify(metadata), (err) => {
             console.log(err ? err : "Done");
         });
-        res.end("thanks");
+        res.writeHead(303, { Location: "/" });
+        res.end();
     });
     return req.pipe(busboy);
 });
