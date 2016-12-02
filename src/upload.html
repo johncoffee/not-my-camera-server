@@ -23,6 +23,7 @@
     let currentEvent = null
     window.addEventListener("deviceorientation", (event) => {
         currentEvent = event
+      deviceOrientationListener(event)
     })
 
     window.addEventListener("load", function () {
@@ -41,9 +42,9 @@
 
 <hr>
 <p>Debug
-
-<canvas id="myCanvas" width="360" height="450" style="border:1px solid #d3d3d3;">
-</canvas>
+<div>
+    <canvas id="myCanvas" width="360" height="450" style="border:1px solid #d3d3d3;"></canvas>
+</div>
 <script>
   function deviceOrientationListener(event) {
     var c = document.getElementById("myCanvas");
@@ -68,10 +69,6 @@
     ctx.fillText("Gamma: " + Math.round(event.gamma), 10, 270);
     ctx.beginPath();
     ctx.fillRect(90, 340, 180, event.gamma);
-  }
-
-  if (window.DeviceOrientationEvent) {
-    window.addEventListener("deviceorientation", deviceOrientationListener);
   }
 </script>
 
