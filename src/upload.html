@@ -5,9 +5,9 @@
 </head>
 <body>
 <form method="POST" action="/api/image" enctype="multipart/form-data">
-    <p> <input type="number" name="alpha" placeholder="alpha">
-    <p> <input type="number" name="beta"  placeholder="beta">
-    <p> <input type="number" name="gamma" placeholder="gamma">
+    <p><input type="number" name="alpha" placeholder="alpha">
+    <p><input type="number" name="beta" placeholder="beta">
+    <p><input type="number" name="gamma" placeholder="gamma">
     <p> Take a photo
         <input name=filefield type="file" accept="image/*" capture="camera">
     <p><input type="submit">
@@ -17,31 +17,27 @@
 <script src="//raw.githubusercontent.com/johncoffee/deviceapi-normaliser/master/deviceapi-normaliser.js"></script>
 
 <script type="text/javascript">
-  var current_motion = null;
+  let current_motion = null
 
-  var fps = 10;
-  var refresh_freq = 1000 / fps; //msec to update the screen
+  let fps = 10
+  let refresh_freq = 1000 / fps
 
   window.addEventListener("devicemotion", function (event) {
-    current_motion  = deviceMotion(event);
+    alert(2)
+    current_motion = deviceMotion(event);
   }, false);
 
-  window.addEventListener("load", () => {
-    let $ =
+  window.addEventListener("load", function () {
+    console.log(1)
 
-        window.setInterval(function() {
-
-        // update the various elements in the page at a predefined
-        // frequency.
-
-        if (current_motion !== null) {
-          document.querySelector(`[name="alpha"]`).setAttribute(current_motion.rotationRate.alpha)
-          document.querySelector(`[name="beta"]` ).setAttribute(current_motion.rotationRate.beta)
-          document.querySelector(`[name="gamma"]`).setAttribute(current_motion.rotationRate.gamma)
-        }
-      }, refresh_freq);
-
-  });
+    window.setInterval(function () {
+      if (current_motion !== null) {
+        document.querySelector(`[name="alpha"]`).setAttribute(current_motion.rotationRate.alpha)
+        document.querySelector(`[name="beta"]`).setAttribute(current_motion.rotationRate.beta)
+        document.querySelector(`[name="gamma"]`).setAttribute(current_motion.rotationRate.gamma)
+      }
+    }, refresh_freq)
+  })
 
 </script>
 
