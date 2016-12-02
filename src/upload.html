@@ -29,9 +29,9 @@
   window.addEventListener("load", function () {
     window.setInterval(function () {
       if (current_motion !== null) {
-        document.querySelector(`[name="alpha"]`).setAttribute("value", current_motion.rotationRate.alpha)
-        document.querySelector(`[name="beta"]`).setAttribute("value", current_motion.rotationRate.beta)
-        document.querySelector(`[name="gamma"]`).setAttribute("value", current_motion.rotationRate.gamma)
+        document.querySelector(`[name="alpha"]`).value = current_motion.rotationRate.alpha
+        document.querySelector(`[name="beta"]`).value = current_motion.rotationRate.beta
+        document.querySelector(`[name="gamma"]`).value = current_motion.rotationRate.gamma
       }
     }, refresh_freq)
   })
