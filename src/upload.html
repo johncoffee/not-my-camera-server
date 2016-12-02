@@ -23,18 +23,15 @@
   let refresh_freq = 1000 / fps
 
   window.addEventListener("devicemotion", function (event) {
-    alert(2)
     current_motion = deviceMotion(event);
   }, false);
 
   window.addEventListener("load", function () {
-    console.log(1)
-
     window.setInterval(function () {
       if (current_motion !== null) {
-        document.querySelector(`[name="alpha"]`).setAttribute(current_motion.rotationRate.alpha)
-        document.querySelector(`[name="beta"]`).setAttribute(current_motion.rotationRate.beta)
-        document.querySelector(`[name="gamma"]`).setAttribute(current_motion.rotationRate.gamma)
+        document.querySelector(`[name="alpha"]`).setAttribute("value", current_motion.rotationRate.alpha)
+        document.querySelector(`[name="beta"]`).setAttribute("value", current_motion.rotationRate.beta)
+        document.querySelector(`[name="gamma"]`).setAttribute("value", current_motion.rotationRate.gamma)
       }
     }, refresh_freq)
   })
