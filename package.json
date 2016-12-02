@@ -4,7 +4,8 @@
   "description": "n/a",
   "repository": "n/a",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "prestart": "node src/scripts/check-uploads.js"
   },
   "dependencies": {
     "@types/busboy": "^0.2.3",

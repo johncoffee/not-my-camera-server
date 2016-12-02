@@ -1,0 +1,7 @@
+{
+  "name": "not my camera",
+  "description": "n/a",
+  "repository": "https://github.com/johncoffee/not-my-camera-server.git",
+  "keywords": ["node"],
+  "image": "heroku/nodejs"
+}
