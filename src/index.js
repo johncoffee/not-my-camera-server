@@ -4,33 +4,21 @@ const router_1 = require("./router");
 const Busboy = require("busboy");
 const fs = require("fs");
 const url = require("url");
+const path = require("path");
 let port = process.env.PORT || 3000;
 let router = new router_1.default();
 console.log("Listening on " + port);
 // routes
 router.GET("/", (req, res) => {
-    res.end(`<!doctype html>
-    <html>
-<head>
-<meta charset="utf-8">
-</head>
-<body>
-       <form method="POST" action="/api/image" enctype="multipart/form-data">
-        <p> <input type="text" name="alpha" placeholder="alpha">
-        <p> <input type="text" name="beta"  placeholder="beta">
-        <p> <input type="text" name="gamma" placeholder="gamma">
-        <p>
-            <input name=filefield type="file" accept="image/*" capture="camera">
-        <p><input type="submit">
-      </form>
-<script>     
-
-let e = document.querySelector("[name=orientation]")
-e.value = (window.screen.orientation.type.indexOf('landscape') > -1) ? 1 : 0
-</script>
-</body>
-</html>
-    `);
+    let contents = "";
+    let filePath = path.resolve(path.join(__dirname, "/upload.html"));
+    console.log(filePath);
+    fs.readFile(filePath, "utf8", (err, data) => {
+        if (!err) {
+            contents = data;
+        }
+        res.end(contents);
+    });
 });
 router.POST("/api/image", (req, res) => {
     let busboy = new Busboy({

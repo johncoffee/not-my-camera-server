@@ -5,6 +5,7 @@ import Router from "./router";
 import * as Busboy from "busboy"
 import * as fs from "fs"
 import * as url from "url"
+import * as path from "path"
 import {ICerealizeable} from "./ICerealizeable"
 
 let port = process.env.PORT || 3000
@@ -16,28 +17,15 @@ console.log("Listening on " + port)
 // routes
 
 router.GET("/", (req:IncomingMessage, res:ServerResponse) => {
-    res.end(`<!doctype html>
-    <html>
-<head>
-<meta charset="utf-8">
-</head>
-<body>
-       <form method="POST" action="/api/image" enctype="multipart/form-data">
-        <p> <input type="text" name="alpha" placeholder="alpha">
-        <p> <input type="text" name="beta"  placeholder="beta">
-        <p> <input type="text" name="gamma" placeholder="gamma">
-        <p>
-            <input name=filefield type="file" accept="image/*" capture="camera">
-        <p><input type="submit">
-      </form>
-<script>     
-
-let e = document.querySelector("[name=orientation]")
-e.value = (window.screen.orientation.type.indexOf('landscape') > -1) ? 1 : 0
-</script>
-</body>
-</html>
-    `)
+    let contents = ""
+    let filePath = path.resolve(path.join(__dirname, "/upload.html"))
+    console.log(filePath)
+    fs.readFile(filePath, "utf8", (err:Error, data:string) => {
+        if (!err) {
+            contents = data
+        }
+        res.end(contents)
+    })
 })
 
 router.POST("/api/image", (req:IncomingMessage, res:ServerResponse) => {
