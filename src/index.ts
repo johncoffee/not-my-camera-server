@@ -29,6 +29,9 @@ router.GET("/", (req:IncomingMessage, res:ServerResponse) => {
 })
 
 router.POST("/api/image", (req:IncomingMessage, res:ServerResponse) => {
+    let keys:string[] = ["alpha", "beta", "gamma"]
+
+
     let busboy = new Busboy({
         headers: req.headers,
         limits: {
@@ -65,8 +68,7 @@ router.POST("/api/image", (req:IncomingMessage, res:ServerResponse) => {
             console.log(err ? err : "Done")
         })
 
-        res.writeHead(303, {Location: "/image"})
-        res.end()
+        res.end("thanks")
     });
 
     return req.pipe(busboy)

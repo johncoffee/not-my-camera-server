@@ -8,8 +8,7 @@
     "prestart": "node src/scripts/check-uploads.js"
   },
   "dependencies": {
-    "busboy": "^0.2.13",
-    "deviceapi-normaliser": "git+https://github.com/johncoffee/deviceapi-normaliser.git"
+    "busboy": "^0.2.13"
   },
   "author": "",
   "license": "ISC"

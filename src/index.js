@@ -21,6 +21,7 @@ router.GET("/", (req, res) => {
     });
 });
 router.POST("/api/image", (req, res) => {
+    let keys = ["alpha", "beta", "gamma"];
     let busboy = new Busboy({
         headers: req.headers,
         limits: {
@@ -50,8 +51,7 @@ router.POST("/api/image", (req, res) => {
         fs.writeFile(dest.replace(/\.\w+$/, `.json`), JSON.stringify(metadata), (err) => {
             console.log(err ? err : "Done");
         });
-        res.writeHead(303, { Location: "/image" });
-        res.end();
+        res.end("thanks");
     });
     return req.pipe(busboy);
 });

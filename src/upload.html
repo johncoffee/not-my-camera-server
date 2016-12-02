@@ -6,15 +6,23 @@
 </head>
 <body>
 <form method="POST" action="/api/image" enctype="multipart/form-data">
-    <p><input type="text" name="alpha" placeholder="alpha">
-    <p><input type="text" name="beta" placeholder="beta">
-    <p><input type="text" name="gamma" placeholder="gamma">
-    <p> Take a photo
-        <input name=filefield type="file" accept="image/*" capture="camera">
-    <p><input type="submit">
+    <h3 style="font-weight: bold">Take a photo!</h3>
+
+    <p><input name=filefield type="file" accept="image/*" capture="camera"  onchange="changeEventHandler(event);">
+
+    <p><input type="submit" style="font-size: 17px" value="Send!">
+
+    <hr>
+    <p><input type="hidden" name="alpha" placeholder="alpha">
+    <p><input type="hidden" name="beta"  placeholder="beta">
+    <p><input type="hidden" name="gamma" placeholder="gamma">
+    <p><input type="hidden" name="userAgent" placeholder="gamma">
 </form>
 
 <script type="text/javascript">
+  function changeEventHandler(event) {
+    alert('You like ' + event.target.value + ' ice cream.');
+  }
 
   if (window.DeviceOrientationEvent) {
 
@@ -23,52 +31,25 @@
     let currentEvent = null
     window.addEventListener("deviceorientation", (event) => {
         currentEvent = event
-      deviceOrientationListener(event)
     })
+
+    document.querySelector(`[name="userAgent"]`).value = navigator.userAgent
+
+    let p1 = document.querySelector(`[name="alpha"]`)
+    let p2 = document.querySelector(`[name="beta"]`)
+    let p3 = document.querySelector(`[name="gamma"]`)
 
     window.addEventListener("load", function () {
       window.setInterval(function () {
         if (currentEvent !== null) {
-          document.querySelector(`[name="alpha"]`).value = currentEvent.alpha
-          document.querySelector(`[name="beta"]`).value = currentEvent.beta
-          document.querySelector(`[name="gamma"]`).value = currentEvent.gamma
+          p1.value = currentEvent.alpha
+          p2.value = currentEvent.beta
+          p3.value = currentEvent.gamma
         }
       }, refresh_freq)
     })
   } else {
     alert("Sorry, your browser doesn't support Device Orientation");
-  }
-</script>
-
-<hr>
-<p>Debug
-<div>
-    <canvas id="myCanvas" width="360" height="450" style="border:1px solid #d3d3d3;"></canvas>
-</div>
-<script>
-  function deviceOrientationListener(event) {
-    var c = document.getElementById("myCanvas");
-    var ctx = c.getContext("2d");
-
-    ctx.clearRect(0, 0, c.width, c.height);
-    ctx.fillStyle = "#FF7777";
-    ctx.font = "14px Verdana";
-    ctx.fillText("Alpha: " + Math.Round(event.alpha), 10, 20);
-    ctx.beginPath();
-    ctx.moveTo(180, 75);
-    ctx.lineTo(210, 75);
-    ctx.arc(180, 75, 60, 0, event.alpha * Math.PI / 180);
-    ctx.fill();
-
-    ctx.fillStyle = "#FF6600";
-    ctx.fillText("Beta: " + Math.round(event.beta), 10, 140);
-    ctx.beginPath();
-    ctx.fillRect(180, 150, event.beta, 90);
-
-    ctx.fillStyle = "#FF0000";
-    ctx.fillText("Gamma: " + Math.round(event.gamma), 10, 270);
-    ctx.beginPath();
-    ctx.fillRect(90, 340, 180, event.gamma);
   }
 </script>
 
