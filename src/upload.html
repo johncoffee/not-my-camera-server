@@ -5,7 +5,7 @@
     <meta charset="utf-8">
 </head>
 <body>
-<form method="POST" action="/api/image" enctype="multipart/form-data">
+<form method="POST" action="/api/image" enctype="multipart/form-data" style="display: none">
     <h3 style="font-weight: bold">Take a photo!</h3>
 
     <p><input name=filefield type="file" accept="image/*" capture="camera"  onchange="changeEventHandler(event);">
@@ -20,35 +20,40 @@
 </form>
 
 <script type="text/javascript">
+  var currentEvent = null
+  var debug = localStorage ? localStorage.debug == 1 : false
+  if (debug) {
+    document.querySelector("form").style.display = "block"
+  }
+
   function changeEventHandler(event) {
-    alert('You like ' + event.target.value + ' ice cream.');
+    updateSensorFields()
   }
 
   if (window.DeviceOrientationEvent) {
-
-    let fps = 10
-    let refresh_freq = 1000 / fps
-    let currentEvent = null
     window.addEventListener("deviceorientation", (event) => {
+        if (currentEvent === null) {
+          document.querySelector("form").style.display = "block"
+        }
         currentEvent = event
     })
 
     document.querySelector(`[name="userAgent"]`).value = navigator.userAgent
 
-    let p1 = document.querySelector(`[name="alpha"]`)
-    let p2 = document.querySelector(`[name="beta"]`)
-    let p3 = document.querySelector(`[name="gamma"]`)
+    function updateSensorFields () {
+      if (currentEvent !== null) {
+        let p1 = document.querySelector(`[name="alpha"]`)
+        let p2 = document.querySelector(`[name="beta"]`)
+        let p3 = document.querySelector(`[name="gamma"]`)
 
-    window.addEventListener("load", function () {
-      window.setInterval(function () {
-        if (currentEvent !== null) {
-          p1.value = currentEvent.alpha
-          p2.value = currentEvent.beta
-          p3.value = currentEvent.gamma
-        }
-      }, refresh_freq)
-    })
-  } else {
+        p1.value = currentEvent.alpha
+        p2.value = currentEvent.beta
+        p3.value = currentEvent.gamma
+      }
+    }
+  }
+  else {
+    document.querySelector("form").style.display = "none"
     alert("Sorry, your browser doesn't support Device Orientation");
   }
 </script>
