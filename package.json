@@ -1,0 +1,15 @@
+{
+  "name": "not-my-camera-server",
+  "version": "0.1.0",
+  "description": "n/a",
+  "repository": "n/a",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "@types/busboy": "^0.2.3",
+    "busboy": "^0.2.13"
+  },
+  "author": "",
+  "license": "ISC"
+}
