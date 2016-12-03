@@ -9,10 +9,19 @@ let port = process.env.PORT || 3000;
 let router = new router_1.default();
 console.log("Listening on " + port);
 // routes
+router.GET("/view", (req, res) => {
+    let contents = "";
+    let filePath = path.resolve(path.join(__dirname, "/view.html"));
+    fs.readFile(filePath, "utf8", (err, data) => {
+        if (!err) {
+            contents = data;
+        }
+        res.end(contents);
+    });
+});
 router.GET("/", (req, res) => {
     let contents = "";
     let filePath = path.resolve(path.join(__dirname, "/upload.html"));
-    console.log(filePath);
     fs.readFile(filePath, "utf8", (err, data) => {
         if (!err) {
             contents = data;
@@ -21,7 +30,7 @@ router.GET("/", (req, res) => {
     });
 });
 router.POST("/api/image", (req, res) => {
-    let keys = ["alpha", "beta", "gamma"];
+    // let keys:string[] = ["alpha", "beta", "gamma"]
     let busboy = new Busboy({
         headers: req.headers,
         limits: {
@@ -59,11 +68,9 @@ router.POST("/api/image", (req, res) => {
 router.GET("/api/image/search", (req, res) => {
     let params = url.parse(req.url, true).query;
     let keys = ["alpha", "beta", "gamma"];
-    console.log(keys);
     let searchProps = keys.map((key) => {
         return parseFloat(params[key]);
     });
-    console.log(params);
     var walkPath = './uploads';
     let bestImage = '';
     let bestDistance = -1;
@@ -76,7 +83,7 @@ router.GET("/api/image/search", (req, res) => {
             (function next() {
                 var file = list[i++];
                 if (!file) {
-                    return done(null);
+                    return done(null, bestImage);
                 }
                 file = dir + '/' + file;
                 fs.stat(file, function (error, stat) {
@@ -93,12 +100,11 @@ router.GET("/api/image/search", (req, res) => {
                             let fileProps = keys.map((key) => {
                                 return parseFloat(contents[key]);
                             });
-                            console.log(contents);
-                            console.log(searchProps, "vs", fileProps);
                             let dist = distance(fileProps, searchProps);
-                            console.log(file, dist);
-                            if (bestDistance < dist) {
-                                bestImage = file;
+                            if (bestDistance === -1 || dist < bestDistance) {
+                                // console.log(searchProps,"vs",fileProps, bestDistance, " > ", dist)
+                                bestDistance = dist;
+                                bestImage = file.replace(`.json`, `.jpg`);
                             }
                         }
                         else {
@@ -110,11 +116,16 @@ router.GET("/api/image/search", (req, res) => {
         });
     }
     walk(walkPath, (error) => {
-        res.writeHead(error ? 500 : 200);
         if (!error) {
-            console.log(bestImage);
+            fs.readFile(bestImage, (err, data) => {
+                res.writeHead(200, { "Content-Type": "image/jpeg" });
+                res.end(data);
+            });
         }
-        res.end();
+        else {
+            res.writeHead(500);
+            res.end();
+        }
     });
     function distance(a, b) {
         return Math.sqrt(distanceSquared(a, b));

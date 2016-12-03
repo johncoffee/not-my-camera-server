@@ -6,22 +6,23 @@
 </head>
 <body>
 <form method="POST" action="/api/image" enctype="multipart/form-data" style="display: none">
-    <h3 style="font-weight: bold">1. Take a photo!</h3>
+    <p>Help me by shooting some crazy/funny/serious/beautiful photos for later :) The payoff is still being build...</p>
+    <h3 style="font-weight: bold">1. Upload a photo</h3>
     <p><label>
         Use the camera (click here)
         <input name=filefield type="file" accept="image/jpeg" capture="camera" onchange="changeEventHandler(event);">
     </label>
 
     <h3>2. Send it</h3>
-    <p><input type="submit" style="font-size: 17px" value="Post photo!" disabled>
+    <p><input type="submit" style="font-size: 17px" value="submit photo" disabled>
 
-    <p><input type="hidden" name="alpha" placeholder="alpha">
-    <p><input type="hidden" name="beta"  placeholder="beta">
-    <p><input type="hidden" name="gamma" placeholder="gamma">
+    <p><input type="text" name="alpha" placeholder="alpha">
+    <p><input type="text" name="beta"  placeholder="beta">
+    <p><input type="text" name="gamma" placeholder="gamma">
     <p><input type="hidden" name="userAgent" placeholder="gamma">
 </form>
 
-<script type="text/javascript">
+<script>
   var currentEvent = null
   var debug = localStorage ? localStorage.debug == 1 : false
   if (debug) {

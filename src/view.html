@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>viewer</title>
+</head>
+<style>
+    html, body {
+        height: 100%;
+    }
+
+    body {
+        margin: 0;
+    }
+
+    #myImage {
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-color: #000;
+        background-position: center center;
+    }
+</style>
+<body>
+
+<div id="myImage"></div>
+
+<script>
+  var currentEvent = null
+  var loading = false
+  window.addEventListener("deviceorientation", (event) => {
+    if (currentEvent === null) {
+      // first run
+    }
+    currentEvent = event
+
+    if (!loading) {
+      document.getElementById("myImage").style.backgroundColor = `#085061`
+
+      loading = true
+      loadImg(() => {
+        loading = false
+        document.getElementById("myImage").style.backgroundColor = `#000`
+      })
+    }
+  })
+
+  function loadImg (callback) {
+    console.log(`loading...`)
+    var xhr = new XMLHttpRequest();
+
+    let a = currentEvent.alpha
+    let b = currentEvent.beta
+    let g = currentEvent.gamma
+    xhr.open('GET', `/api/image/search?alpha=${a}&beta=${b}&gamma=${g}`, true)
+
+    xhr.responseType = 'arraybuffer';
+
+    xhr.onload = function (e) {
+      console.log(e)
+      if (this.status == 200) {
+        var uInt8Array = new Uint8Array(this.response);
+        var i = uInt8Array.length;
+        var binaryString = new Array(i);
+        while (i--) {
+          binaryString[ i ] = String.fromCharCode(uInt8Array[ i ]);
+        }
+        var data = binaryString.join('');
+
+        var base64 = window.btoa(data);
+        document.getElementById("myImage").style.backgroundImage = `url(data:image/png;base64,${base64})`
+
+        setTimeout(callback, 100)
+      }
+    };
+
+    xhr.send();
+  }
+
+</script>
+
+</body>
+</html>

@@ -15,11 +15,20 @@ let router = new Router()
 console.log("Listening on " + port)
 
 // routes
+router.GET("/view", (req:IncomingMessage, res:ServerResponse) => {
+    let contents = ""
+    let filePath = path.resolve(path.join(__dirname, "/view.html"))
+    fs.readFile(filePath, "utf8", (err:Error, data:string) => {
+        if (!err) {
+            contents = data
+        }
+        res.end(contents)
+    })
+})
 
 router.GET("/", (req:IncomingMessage, res:ServerResponse) => {
     let contents = ""
     let filePath = path.resolve(path.join(__dirname, "/upload.html"))
-    console.log(filePath)
     fs.readFile(filePath, "utf8", (err:Error, data:string) => {
         if (!err) {
             contents = data
@@ -29,8 +38,7 @@ router.GET("/", (req:IncomingMessage, res:ServerResponse) => {
 })
 
 router.POST("/api/image", (req:IncomingMessage, res:ServerResponse) => {
-    let keys:string[] = ["alpha", "beta", "gamma"]
-
+    // let keys:string[] = ["alpha", "beta", "gamma"]
 
     let busboy = new Busboy({
         headers: req.headers,
@@ -41,6 +49,7 @@ router.POST("/api/image", (req:IncomingMessage, res:ServerResponse) => {
             files: 1
         }
     })
+
     let metadata = <ICerealizeable>{}
     let dest = `./uploads/` + new Date().toISOString() + "_" + (Math.random() + '').replace('.','') + `.jpg`
 
@@ -80,12 +89,9 @@ router.GET("/api/image/search", (req:IncomingMessage, res:ServerResponse) => {
 
     let keys:string[] = ["alpha", "beta", "gamma"]
 
-    console.log(keys)
     let searchProps:number[] = keys.map((key):number => {
         return parseFloat(params[key])
     })
-
-    console.log(params)
 
     var walkPath = './uploads';
 
@@ -102,13 +108,12 @@ router.GET("/api/image/search", (req:IncomingMessage, res:ServerResponse) => {
                 var file = list[i++];
 
                 if (!file) {
-                    return done(null);
+                    return done(null, bestImage);
                 }
 
                 file = dir + '/' + file;
 
                 fs.stat(file, function (error, stat) {
-
                     if (stat && stat.isDirectory()) {
                         walk(file, function () {
                             next();
@@ -124,13 +129,12 @@ router.GET("/api/image/search", (req:IncomingMessage, res:ServerResponse) => {
                                 return parseFloat(contents[key])
                             })
 
-                            console.log(contents)
-                            console.log(searchProps,"vs",fileProps)
                             let dist = distance(fileProps, searchProps)
-                            console.log(file, dist)
 
-                            if (bestDistance < dist) {
-                                bestImage = file
+                            if (bestDistance === -1 || dist < bestDistance) {
+                                // console.log(searchProps,"vs",fileProps, bestDistance, " > ", dist)
+                                bestDistance = dist
+                                bestImage = file.replace(`.json`,`.jpg`)
                             }
                         }
                         else {
@@ -144,11 +148,16 @@ router.GET("/api/image/search", (req:IncomingMessage, res:ServerResponse) => {
     }
 
     walk(walkPath, (error:Error) => {
-        res.writeHead(error ? 500 : 200)
         if (!error) {
-            console.log(bestImage)
+            fs.readFile(bestImage, (err, data) => {
+                res.writeHead(200, {"Content-Type":"image/jpeg"})
+                res.end(data)
+            })
         }
-        res.end()
+        else {
+            res.writeHead(500)
+            res.end()
+        }
     })
 
     function distance(a:number[], b:number[]):number {

@@ -1,11 +1,21 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+
     "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+
+    "diagnostics": true,
+    "noEmitHelpers": true,
+
     "preserveConstEnums": true,
     "target": "ES6",
     "sourceMap": false,
-    "pretty": true
+    "pretty": true,
+
+    "noEmitOnError": true
   },
   "exclude": [
     "node_modules",
